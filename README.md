@@ -19,4 +19,4 @@ A simple implementation of the classic Pong game using Python's turtle library.
 
     Python 3
     turtle library
-    pygame library (for audio)
+  
