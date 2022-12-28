@@ -1,4 +1,4 @@
-# pong_game
+# Pong Game
 
 A simple implementation of the classic Pong game using Python's turtle library.
 # How to play
