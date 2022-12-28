@@ -1,4 +1,13 @@
 import turtle
+import playsound
+
+
+def game_start():
+    playsound.playsound('game_start.mp3', True)# play the game start audio
+    game_start()
+
+def point_scored():
+    playsound.playsound('point_scored.mp3', True)
 
 # Set up the screen
 wn = turtle.Screen()
@@ -46,15 +55,19 @@ pen.color("white")
 pen.penup()
 pen.hideturtle()
 pen.goto(0, 260)
-pen.write("Player A: 0  Player B: 0", align="center", font=("Courier", 24, "normal"))
+pen.write("Player A: 0  Player B: 0", align="center",
+          font=("Courier", 24, "normal"))
 
 # Function to move the paddles up and down
+
+
 def paddle_a_up():
     y = paddle_a.ycor()
     y += 20
     if y > 250:  # check if the paddle is at the top border
         y = 250  # set the paddle's y-coordinate to the top border
     paddle_a.sety(y)
+
 
 def paddle_a_down():
     y = paddle_a.ycor()
@@ -63,12 +76,14 @@ def paddle_a_down():
         y = -250  # set the paddle's y-coordinate to the bottom border
     paddle_a.sety(y)
 
+
 def paddle_b_up():
     y = paddle_b.ycor()
     y += 20
     if y > 250:  # check if the paddle is at the top border
         y = 250  # set the paddle's y-coordinate to the top border
     paddle_b.sety(y)
+
 
 def paddle_b_down():
     y = paddle_b.ycor()
@@ -89,9 +104,11 @@ wn.onkeypress(paddle_b_down, "Down")
 game_paused = False
 
 # Function to toggle the game state
+
 def toggle_pause():
     global game_paused
     game_paused = not game_paused
+
 
 # Keyboard bindings
 wn.onkeypress(toggle_pause, "p")
@@ -100,11 +117,15 @@ wn.onkeypress(toggle_pause, "p")
 game_paused = False
 
 # Function to toggle the game state
+
+
 def toggle_pause():
     global game_paused
     game_paused = not game_paused
-    
+
     # Function to restart the game
+
+
 def toggle_restart():
     global score_a, score_b, game_paused
     score_a = 0
@@ -114,7 +135,8 @@ def toggle_restart():
     ball.dx = 1.5
     ball.dy = 1.5
     pen.clear()
-    pen.write("Player A: 0  Player B: 0", align="center", font=("Courier", 24, "normal"))
+    pen.write("Player A: 0  Player B: 0", align="center",
+              font=("Courier", 24, "normal"))
 
 
 # Create a turtle to display the pause screen
@@ -130,12 +152,13 @@ wn.onkeypress(toggle_pause, "p")
 wn.onkeypress(toggle_restart, "r")
 
 # Main game loop
-while True:
+while True: # play the game start audio
     wn.update()
 
     # Check the game state
     if game_paused:
-        pause_screen.write("Game Paused,\nPress 'r' to restart", align="center", font=("Courier", 24, "normal"))
+        pause_screen.write("Game Paused,\nPress 'r' to restart",
+                           align="center", font=("Courier", 24, "normal"))
         continue  # skip the rest of the loop and go to the next iteration
     else:
         pause_screen.clear()  # clear the pause screen
@@ -144,13 +167,31 @@ while True:
     ball.setx(ball.xcor() + ball.dx)
     ball.sety(ball.ycor() + ball.dy)
 
+    # Check for a point scored
+    if ball.xcor() > 390:
+        score_a += 1
+        pen.clear()
+        pen.write("Player A: {}  Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+        point_scored()  # play the point scored audio
+        ball.goto(0, 0)
+        ball.dx *= -1
+    elif ball.xcor() < -390:
+        score_b += 1
+        pen.clear()
+        pen.write("Player A: {}  Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+        point_scored()  # play the point scored audio
+        ball.goto(0, 0)
+        ball.dx *= -1
+
     # Border checking
     if ball.ycor() > 290:
-        ball.sety(290)  # set the ball's vertical position to the top of the border
+        # set the ball's vertical position to the top of the border
+        ball.sety(290)
         ball.dy *= -1  # change the ball's vertical direction
 
     if ball.ycor() < -290:
-        ball.sety(-290)  # set the ball's vertical position to the bottom of the border
+        # set the ball's vertical position to the bottom of the border
+        ball.sety(-290)
         ball.dy *= -1  # change the ball's vertical direction
 
     if ball.xcor() > 390:
@@ -158,23 +199,25 @@ while True:
         ball.dx *= -1
         score_a += 1
         pen.clear()
-        pen.write("Player A: {}  Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+        pen.write("Player A: {}  Player B: {}".format(score_a, score_b),
+                  align="center", font=("Courier", 24, "normal"))
 
     if ball.xcor() < -390:
         ball.goto(0, 0)  # reset the ball to the middle of the screen
         ball.dx *= -1
         score_b += 1
         pen.clear()
-        pen.write("Player A: {}  Player B: {}".format(score_a, score_b), align="center", font=("Courier", 24, "normal"))
+        pen.write("Player A: {}  Player B: {}".format(score_a, score_b),
+                  align="center", font=("Courier", 24, "normal"))
 
     # Paddle and ball collisions
     if (ball.xcor() > 340 and ball.xcor() < 350) and (ball.ycor() < paddle_b.ycor() + 40 and ball.ycor() > paddle_b.ycor() - 40):
         ball.setx(340)
         ball.dx *= -1
-    
+
     if (ball.xcor() < -340 and ball.xcor() > -350) and (ball.ycor() < paddle_a.ycor() + 40 and ball.ycor() > paddle_a.ycor() - 40):
         ball.setx(-340)
         ball.dx *= -1
-        
-wn.mainloop()
 
+
+wn.mainloop()
